@@ -75,14 +75,14 @@ module.exports = {
   // pull and remove a reaction by the reaction's reactionId value
   deleteReaction(req, res) {
     Thought.findOneAndUpdate(
-      { _id: req.params.ThoughtId },
+      { _id: req.params.thoughtId },
       { $pull: { reactions: { reactionId: body.reactionId } } },
       { new: true, runValidators: true }
     )
-      .then((user) =>
-        !user
+      .then((thought) =>
+        !thought
           ? res.status(404).json({ message: "No user associated with that ID" })
-          : res.json(user)
+          : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));
   },
