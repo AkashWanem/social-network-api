@@ -26,11 +26,25 @@ module.exports = {
             { $push: { thoughts: Thought._id } },
             { new: true }
         )
-        .then((User) => {
-            console.log(`Thought for user id: ${User._id} is added`);
+        .then((user) => {
+            console.log(`Thought for user id: ${user._id} is added`);
           });
           return res.json(Thought);
     })
+    .catch((err) => res.status(500).json(err));
+  },
+  // update a thought by its _id
+  updateThought(req, res) {
+    Thought.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: req.body },
+      { runValidators: true, new: true }
+    )
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: 'No thought associated with that ID' })
+        : res.json(user)
+    )
     .catch((err) => res.status(500).json(err));
   },
 };
