@@ -11,7 +11,7 @@ const ThoughtSchema = new Schema (
         createdAt: {
             type: Date,
             default: Date.now,
-            get: FormatDate,
+            get: (date) => timeSince(date),
         },
         username: {
             type: String,
@@ -20,12 +20,10 @@ const ThoughtSchema = new Schema (
         reactions: [ReactionSchema],
     },
     {
-        toJSON: {
-          virtuals: true,
-          getters: true,
-        },
+        timestamps: true,
+        toJSON: { getters: true, virtuals: true },
         id: false,
-    },
+    }
 );
 
 // Create a virtual called reactionCount that retrieves the length of the thought's reactions array field on query.
