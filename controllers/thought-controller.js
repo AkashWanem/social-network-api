@@ -20,16 +20,16 @@ module.exports = {
   // create a new thought
   createThought(req, res) {
     Thought.create(req.body)
-    .then((Thought) => {
+    .then((thought) => {
         User.findOneAndUpdate(
             { _id: body.userId },
-            { $push: { thoughts: Thought._id } },
+            { $push: { thoughts: thought._id } },
             { new: true }
         )
         .then((user) => {
             console.log(`Thought for user id: ${user._id} is added`);
           });
-          return res.json(Thought);
+          return res.json(thought);
     })
     .catch((err) => res.status(500).json(err));
   },
@@ -40,11 +40,17 @@ module.exports = {
       { $set: req.body },
       { runValidators: true, new: true }
     )
-    .then((user) =>
-      !user
+    .then((thought) =>
+      !thought
         ? res.status(404).json({ message: 'No thought associated with that ID' })
-        : res.json(user)
+        : res.json(thought)
     )
+    .catch((err) => res.status(500).json(err));
+  },
+  // remove a thought by its _id
+  deleteThought(req, res) {
+    User.findOneAndDelete({ _id: req.params.userId })
+    .then(() => res.json({ message: 'thought deleted!' }))
     .catch((err) => res.status(500).json(err));
   },
 };
