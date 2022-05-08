@@ -53,4 +53,18 @@ module.exports = {
     .then(() => res.json({ message: 'thought deleted!' }))
     .catch((err) => res.status(500).json(err));
   },
+  // reaction stored in a single thought's reactions array field
+  createReaction(req, res) {
+    Thought.findOneAndUpdate(
+        { _id: params.thoughtId },
+        { $push: { reactions: req.body } },
+        { new: true, runValidators: true }
+    )
+    .then((thought) =>
+      !thought
+        ? res.status(404).json({ message: 'No thought associated with that ID' })
+        : res.json(thought)
+    )
+    .catch((err) => res.status(500).json(err));
+    },
 };
